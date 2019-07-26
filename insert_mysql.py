@@ -5,17 +5,12 @@ import os
 
 class InsertMysql():
     def read_file(self):
-        rfile = open('data.json','r')
-        line = rfile.readline()
-        i = 0
-        while line:
-            dict1 = eval(line)
-            print(dict1)
-            self.insert_mysql(dict1)
-            line = rfile.readline()
-            print('第{}条'.format(i))
-            i += 1
-        os.remove('data.json')
+        with open('ad_data.json','r') as rf:
+            load_dict = rf.readlines()
+            # print(load_dict)
+        for item in load_dict:
+            print(item)
+
 
     def insert_mysql(self,dict1):
         try:
