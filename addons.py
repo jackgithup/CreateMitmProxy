@@ -5,11 +5,19 @@ import json
 class Counter:
 
     def response(self, flow: mitmproxy.http.HTTPFlow):
+        headers = flow.response.headers
+        # print(headers)
         url1 = flow.request.url
+        # print(url1)
+        with open('response.txt', 'a') as wf:
+            wf.write(str(url1) + '\n')
+            wf.write(str(headers) + '\n')
+            wf.close()
         text1 = flow.response.get_text()
         false = False
         true = True
         if '广告' in text1 and 'hl.snssdk.com/api/news/feed/' in url1:
+
             # 获取视频广告
             resp = text1
             json_data = json.loads(resp)
@@ -37,7 +45,7 @@ class Counter:
                         wf.write(str(item)+'\n')
                         wf.close()
                     print(item)
-                    print('一条视频广告')
+                    print('获取一条视频广告')
 
         if '广告' in text1 and 'hl.snssdk.com/2/article/information/' in url1:
             dict1 = eval(text1)
@@ -56,7 +64,8 @@ class Counter:
                 with open('item.txt', 'a') as wf:
                     wf.write(str(item) + '\n')
                     wf.close()
-                print('推荐视频中第一个广告')
+                print(item)
+                print('获取推荐视频中第一个广告')
             except:
                 try:
                     # 图文
@@ -76,7 +85,8 @@ class Counter:
                     with open('item.txt', 'a') as wf:
                         wf.write(str(item) + '\n')
                         wf.close()
-                    print('推荐视频中第一个广告')
+                    print(item)
+                    print('获取推荐视频中第一个广告')
                 except Exception as e:
                     pass
 
@@ -97,6 +107,7 @@ class Counter:
                 with open('item.txt', 'a') as wf:
                     wf.write(str(item) + '\n')
                     wf.close()
+                print(item)
                 print('获取推荐视频中最后一个广告')
             except Exception as e:
                 pass
