@@ -54,7 +54,7 @@ class Counter:
                     print(item)
                     print('获取一条视频广告')
 
-        if '广告' in text1 and 'hl.snssdk.com/2/article/information/' in url1:
+        if '广告' in text1 and 'snssdk.com/2/article/information/' in url1:
             dict1 = eval(text1)
             try:
                 #视频
@@ -108,7 +108,7 @@ class Counter:
                 app = ad['app']
                 item['title'] = app['title']
                 item['description'] = app['description']
-                item['cover_url'] = app['image']['url_list']['url']
+                item['cover_url'] = app['image']['url_list'][0]['url']
                 item['display_url'] = app['web_url']
                 item['download_url'] = app['download_url']
                 file_name = today + '_item.txt'
@@ -119,7 +119,7 @@ class Counter:
                 print(item)
                 print('获取推荐视频中最后一个广告')
             except Exception as e:
-                pass
+                print(e)
 
 
 addons = [
