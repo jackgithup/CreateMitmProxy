@@ -1,6 +1,12 @@
+# encoding:utf8
 import mitmproxy.http
 import json
+import time
 
+# 格式化成2016-03-20 11:45:39形式
+today = time.strftime("%Y%m%d", time.localtime())
+# print(today)
+# print(type(today))
 
 class Counter:
 
@@ -9,14 +15,14 @@ class Counter:
         # print(headers)
         url1 = flow.request.url
         # print(url1)
-        with open('response.txt', 'a') as wf:
-            wf.write(str(url1) + '\n')
-            wf.write(str(headers) + '\n')
-            wf.close()
+        # with open('response.txt', 'a') as wf:
+        #     wf.write(str(url1) + '\n')
+        #     wf.write(str(headers) + '\n')
+        #     wf.close()
         text1 = flow.response.get_text()
         false = False
         true = True
-        if '广告' in text1 and 'hl.snssdk.com/api/news/feed/' in url1:
+        if '广告' in text1 and 'snssdk.com/api/news/feed/' in url1:
 
             # 获取视频广告
             resp = text1
@@ -40,9 +46,10 @@ class Counter:
                         item['cover_url'] = json_content['large_image_list'][0]['url']
                         item['display_url'] = json_content['display_url']
                         item['download_url'] = json_content['share_url']
-
-                    with open('item.txt','a') as wf:
+                    file_name = today + '_item.txt'
+                    with open(file_name,'a') as wf:
                         wf.write(str(item)+'\n')
+                        wf.flush()
                         wf.close()
                     print(item)
                     print('获取一条视频广告')
@@ -55,14 +62,16 @@ class Counter:
                 related_video_toutiao = data['related_video_toutiao']
                 object1 = related_video_toutiao[0]
                 item = {}
-                item['abstract'] = object1['abstract']
-                item['display_url'] = object1['article_url']
-                item['share_url'] = object1['download_url']
-                item['source'] = object1['source']
+                # title, description, cover_url, display_url, download_url
                 item['title'] = object1['title']
-                item['source_avatar'] = object1['web_url']
-                with open('item.txt', 'a') as wf:
+                item['description'] = object1['abstract']
+                item['cover_url'] = object1['web_url']
+                item['display_url'] = object1['article_url']
+                item['download_url'] = object1['download_url']
+                file_name = today + '_item.txt'
+                with open(file_name, 'a') as wf:
                     wf.write(str(item) + '\n')
+                    wf.flush()
                     wf.close()
                 print(item)
                 print('获取推荐视频中第一个广告')
@@ -73,17 +82,17 @@ class Counter:
                     related_video_toutiao = data['related_video_toutiao']
                     object1 = related_video_toutiao[0]
                     item = {}
-                    try:
-                        item['share_url'] = object1['download_url']
-                    except:
-                        pass
-                    middle_image = object1['middle_image']
-                    item['source_avatar'] = middle_image['url']
-                    item['source'] = object1['source']
+                    # title, description, cover_url, display_url, download_url
                     item['title'] = object1['title']
-                    item['source_avatar'] = object1['web_url']
-                    with open('item.txt', 'a') as wf:
+                    item['description'] = object1['source']
+                    middle_image = object1['middle_image']
+                    item['cover_url'] = middle_image['url']
+                    item['display_url'] = object1['web_url']
+                    item['download_url'] = object1['download_url']
+                    file_name = today + '_item.txt'
+                    with open(file_name, 'a') as wf:
                         wf.write(str(item) + '\n')
+                        wf.flush()
                         wf.close()
                     print(item)
                     print('获取推荐视频中第一个广告')
@@ -93,19 +102,19 @@ class Counter:
             # 获取推荐视频中的最后一个广告
             try:
                 item = {}
+                # title, description, cover_url, display_url, download_url
                 data = dict1['data']
                 ad = data['ad']
                 app = ad['app']
                 item['title'] = app['title']
                 item['description'] = app['description']
-                try:
-                    item['cover_url'] = app['image']['url_list']['url']
-                except:
-                    pass
+                item['cover_url'] = app['image']['url_list']['url']
                 item['display_url'] = app['web_url']
                 item['download_url'] = app['download_url']
-                with open('item.txt', 'a') as wf:
+                file_name = today + '_item.txt'
+                with open(file_name, 'a') as wf:
                     wf.write(str(item) + '\n')
+                    wf.flush()
                     wf.close()
                 print(item)
                 print('获取推荐视频中最后一个广告')
