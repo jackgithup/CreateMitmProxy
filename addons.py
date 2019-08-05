@@ -4,7 +4,7 @@ import json
 import time
 
 # 格式化成2016-03-20 11:45:39形式
-today = time.strftime("%Y%m%d", time.localtime())
+today = '/Users/edz/Desktop/zhengmangProject/JRTT/data/' + time.strftime("%Y%m%d", time.localtime())
 # print(today)
 # print(type(today))
 
@@ -12,18 +12,13 @@ class Counter:
 
     def response(self, flow: mitmproxy.http.HTTPFlow):
         headers = flow.response.headers
-        # print(headers)
         url1 = flow.request.url
-        # print(url1)
-        # with open('response.txt', 'a') as wf:
-        #     wf.write(str(url1) + '\n')
-        #     wf.write(str(headers) + '\n')
-        #     wf.close()
         text1 = flow.response.get_text()
+
+
         false = False
         true = True
         if '广告' in text1 and 'snssdk.com/api/news/feed/' in url1:
-
             # 获取视频广告
             resp = text1
             json_data = json.loads(resp)
@@ -119,7 +114,26 @@ class Counter:
                 print(item)
                 print('获取推荐视频中最后一个广告')
             except Exception as e:
-                print(e)
+                try:
+                    item = {}
+                    # title, description, cover_url, display_url, download_url
+                    data = dict1['data']
+                    ad = data['ad']
+                    app = ad['mixed']
+                    item['title'] = app['title']
+                    item['description'] = app['source_name']
+                    item['cover_url'] = app['image']
+                    item['display_url'] = app['web_url']
+                    # item['download_url'] = app['download_url']
+                    file_name = today + '_item.txt'
+                    with open(file_name, 'a') as wf:
+                        wf.write(str(item) + '\n')
+                        wf.flush()
+                        wf.close()
+                    print(item)
+                    print('获取推荐视频中最后一个广告')
+                except Exception as e:
+                    print(e)
 
 
 addons = [
